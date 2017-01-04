@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+            http://www.springframework.org/schema/task
+            http://www.springframework.org/schema/task/spring-task.xsd">
+
+
+    <!--扫描包-->
+    <context:component-scan base-package="me.justgame.vote"/>
+
+    <!--freemarker配置-->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/freemarker/" />
+        <property name="defaultEncoding" value="utf-8" />
+        <property name="freemarkerSettings">
+            <props>
+                <!--<prop key="auto_import">/common/rj.ftl as rjtag</prop>-->
+                <prop key="number_format">0.##</prop>
+                <!--<prop key="classic_compatible">true</prop>-->
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="output_encoding">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="time_format">HH:mm:ss</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="template_exception_handler">ignore</prop>
+                <!-- ignore,debug,html_debug,rethrow,或者自定义类-->
+            </props>
+        </property>
+        <!--<property name="freemarkerVariables">-->
+            <!--<map>-->
+                <!--<entry key="rj">-->
+                    <!--<map>-->
+                        <!--<entry key="permissions">-->
+                            <!--<bean class="com.rongji.common.shiro.tags.PermissionsTag" />-->
+                        <!--</entry>-->
+                        <!--<entry key="dict">-->
+                            <!--<bean class="com.rongji.common.tags.DictInfosTag" />-->
+                        <!--</entry>-->
+                        <!--<entry key="filterDict">-->
+                            <!--<bean class="com.rongji.common.tags.FilterDictMethod" />-->
+                        <!--</entry>-->
+                    <!--</map>-->
+                <!--</entry>-->
+            <!--</map>-->
+        <!--</property>-->
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="contentType" value="text/html;charset=UTF-8"></property>
+        <property name="cache" value="true" />
+        <property name="prefix" value="" />
+        <property name="suffix" value=".html" />
+    </bean>
+
+
+</beans>
