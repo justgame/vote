@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.justgame.vote.test.dao.mapper.TestMapper">
+    <resultMap id="TestResultMap" type="me.justgame.vote.test.model.Test">
+        <result property="id" column="ID" />
+        <result property="message" column="MESSAGE"/>
+    </resultMap>
+
+    <select id="getTest" resultMap="TestResultMap">
+      SELECT * FROM TEST
+    </select>
+
+</mapper>

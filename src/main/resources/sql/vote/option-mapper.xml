@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.justgame.vote.vote.dao.mapper.OptionMapper">
+
+    <resultMap id="OptionResultMap" type="me.justgame.vote.vote.model.Option">
+        <result property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="voteId" column="VOTE_ID" />
+        <result property="counts" column="COUNTS" />
+    </resultMap>
+
+    <sql id="allColumns">
+        ID,
+        NAME,
+        VOTE_ID,
+        COUNTS
+    </sql>
+
+    <select id="getOptionAll" parameterType="String" resultMap="OptionResultMap">
+        SELECT <include refid="allColumns"/>
+          FROM OPTION
+         <where>
+             <if test="value!=null">
+                 AND VOTE_ID = #{value}
+             </if>
+         </where>
+    </select>
+
+    <insert id="addOption" parameterType="me.justgame.vote.vote.model.Option">
+        INSERT
+          INTO OPTION (
+            <include refid="allColumns"/>
+          ) values (
+            #{id},
+            #{name},
+            #{voteId},
+            #{counts}
+          )
+    </insert>
+
+    <delete id="delOptionBatch" parameterType="java.util.List">
+        DELETE
+          FROM OPTION
+         WHERE ID IN
+         <foreach collection="list" item="id" open="(" separator="," close=")">
+             #{id}
+         </foreach>
+    </delete>
+
+
+</mapper>

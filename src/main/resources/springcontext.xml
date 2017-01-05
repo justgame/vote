@@ -22,6 +22,64 @@
     <!--扫描包-->
     <context:component-scan base-package="me.justgame.vote"/>
 
+    <!-- 注解驱动  -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!-- 引入外部配置文件  -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!-- 配置连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="maxActive">
+            <value>${jdbc.maxActive}</value>
+        </property>
+        <property name="minIdle">
+            <value>${jdbc.minIdle}</value>
+        </property>
+        <property name="validationQuery">
+            <value>select 1 from dual</value>
+        </property>
+        <property name="testOnBorrow">
+            <value>true</value>
+        </property>
+        <property name="testOnReturn">
+            <value>true</value>
+        </property>
+        <property name="testWhileIdle">
+            <value>true</value>
+        </property>
+    </bean>
+
+    <!-- 事务管理器 -->
+    <tx:annotation-driven />
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- mybatis -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis.xml" />
+        <!-- mapper和resultmap配置路径 -->
+        <property name="mapperLocations">
+            <list>
+                <!-- 表示在sql包或以下所有目录中，以-map.xml结尾所有文件 -->
+                <value>classpath:sql/*/*-mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 通过扫描的模式，所有的mapper都继承SqlMapper接口的接口， 这样一个bean就可以了 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="me.justgame.vote" />
+        <property name="annotationClass" value="me.justgame.vote.common.MyBatisMapper" />
+    </bean>
+
+
     <!--freemarker配置-->
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/freemarker/" />
@@ -30,7 +88,7 @@
             <props>
                 <!--<prop key="auto_import">/common/rj.ftl as rjtag</prop>-->
                 <prop key="number_format">0.##</prop>
-                <!--<prop key="classic_compatible">true</prop>-->
+                <prop key="classic_compatible">true</prop>
                 <prop key="default_encoding">UTF-8</prop>
                 <prop key="output_encoding">UTF-8</prop>
                 <prop key="locale">zh_CN</prop>
