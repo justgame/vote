@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>投票页面</title>
+    <link rel="stylesheet" href="/htmldocs/plugins/layui/css/layui.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: rgba(193,193,193,0.49);
+        }
+        div.container {
+            width: 220px;
+            margin: 30px auto;
+            padding: 5px;
+            border: 2px solid lightskyblue;
+            border-radius: 10px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .subject {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .container ul li {
+            margin-left: 20px;
+            list-style: circle;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <#list list as vote>
+        <div class="container">
+            <p class="subject">${vote.subject!}</p>
+            <ul>
+                <#list vote.options as option>
+                    <li>${option.name!}</li>
+                </#list>
+            </ul>
+        </div>
+    </#list>
+
+    <script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
+    <script src="/htmldocs/plugins/layui/layui.js"></script>
+    <script>
+        // 调用layui的layer模块
+        layui.use(['layer'], function(){
+            var layer = layui.layer
+        });
+
+        $('.container').on('click', function () {
+            //弹出一个iframe层
+            layer.open({
+                type: 2,
+                title: ['投票页面', 'font-size: 20px;font-weight: bold'],
+                maxmin: true,
+                shadeClose: true, //点击遮罩关闭层
+                area : ['820px' , '600px'],
+                content: '/freemarker/vote/main.html'
+            });
+        });
+    </script>
+</body>
+</html>

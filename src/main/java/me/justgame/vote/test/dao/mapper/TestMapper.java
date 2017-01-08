@@ -1,6 +1,6 @@
 package me.justgame.vote.test.dao.mapper;
 
-import me.justgame.vote.common.MyBatisMapper;
+import me.justgame.vote.common.annotations.MyBatisMapper;
 import me.justgame.vote.test.model.Test;
 
 import java.util.List;

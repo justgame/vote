@@ -76,7 +76,7 @@
     <!-- 通过扫描的模式，所有的mapper都继承SqlMapper接口的接口， 这样一个bean就可以了 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="me.justgame.vote" />
-        <property name="annotationClass" value="me.justgame.vote.common.MyBatisMapper" />
+        <property name="annotationClass" value="me.justgame.vote.common.annotations.MyBatisMapper" />
     </bean>
 
 

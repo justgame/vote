@@ -22,8 +22,18 @@ public class OptionDaoImpl implements OptionDao {
     }
 
     @Override
+    public Option getOptionById(String id) throws Exception {
+        return mapper.getOptionById(id);
+    }
+
+    @Override
     public int addOption(Option option) throws Exception {
         return mapper.addOption(option);
+    }
+
+    @Override
+    public int editOption(Option option) throws Exception {
+        return mapper.editOption(option);
     }
 
     @Override

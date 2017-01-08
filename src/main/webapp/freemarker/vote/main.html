@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>投票</title>
+    <link rel="stylesheet" href="/htmldocs/plugins/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/htmldocs/css/buttons.css">
+    <link rel="stylesheet" href="/htmldocs/plugins/ui-layout/layout-default-latest.css">
+    <link rel="stylesheet" href="/htmldocs/plugins/layui/css/layui.css">
+
+    <script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
+    <script src="/htmldocs/plugins/ui-layout/jquery.layout-latest.js"></script>
+    <script src="/htmldocs/plugins/layui/layui.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('body').layout({ applyDemoStyles: true });
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .west-container {
+            /*background-color: rgba(209,209,209,0.49);*/
+            background-color: red;
+        }
+        .addVote {
+
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ui-layout-center">Center
+        <p><a href="http://layout.jquery-dev.com/demos.html">Go to the Demos page</a></p>
+        <p>* Pane-resizing is disabled because ui.draggable.js is not linked</p>
+        <p>* Pane-animation is disabled because ui.effects.js is not linked</p>
+    </div>
+
+    <div class="ui-layout-west west-container">
+        <a href="javascript:void(0);" class="button button-3d button-primary button-rounded addVote">
+            <span class="glyphicon glyphicon-edit"></span> 发起投票
+        </a>
+        <ul id="menu">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+    </div>
+</body>
+</html>

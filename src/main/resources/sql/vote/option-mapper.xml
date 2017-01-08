@@ -27,6 +27,12 @@
          </where>
     </select>
 
+    <select id="getOptionById" parameterType="String" resultMap="OptionResultMap">
+        SELECT <include refid="allColumns"/>
+          FROM OPTION
+         WHERE ID = #{id}
+    </select>
+
     <insert id="addOption" parameterType="me.justgame.vote.vote.model.Option">
         INSERT
           INTO OPTION (
@@ -38,6 +44,19 @@
             #{counts}
           )
     </insert>
+
+    <update id="editOption" parameterType="me.justgame.vote.vote.model.Option">
+        UPDATE OPTION
+         <set>
+              <if test="name!=null">
+                  NAME = #{name},
+              </if>
+              <if test="counts!=null">
+                  COUNTS = #{counts},
+              </if>
+         </set>
+        WHERE ID = #{id}
+    </update>
 
     <delete id="delOptionBatch" parameterType="java.util.List">
         DELETE

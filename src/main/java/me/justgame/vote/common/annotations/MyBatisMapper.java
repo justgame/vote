@@ -1,4 +1,4 @@
-package me.justgame.vote.common;
+package me.justgame.vote.common.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

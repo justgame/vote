@@ -1,5 +1,6 @@
 package me.justgame.vote.vote.service.impl;
 
+import me.justgame.vote.common.utils.IdUtil;
 import me.justgame.vote.vote.dao.OptionDao;
 import me.justgame.vote.vote.dao.VoteDao;
 import me.justgame.vote.vote.model.Option;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by xcl on 2017-01-05.
@@ -52,9 +54,12 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public void addVote(Vote vote) throws Exception {
         List<Option> options = vote.getOptions();
+        vote.setId(IdUtil.getUID());
         voteDao.addVote(vote);
-        for (Option option : options)
+        for (Option option : options) {
+            option.setId(IdUtil.getUID());
             optionDao.addOption(option);
+        }
     }
 
     @Transactional

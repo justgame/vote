@@ -17,12 +17,28 @@ public interface OptionDao {
     List<Option> getOptionAll(String voteId) throws Exception;
 
     /**
+     * 根据id获取选项信息
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    Option getOptionById(String id) throws Exception;
+
+    /**
      * 新增选项
      * @param option
      * @return
      * @throws Exception
      */
     int addOption(Option option) throws Exception;
+
+    /**
+     * 编辑选项
+     * @param option
+     * @return
+     * @throws Exception
+     */
+    int editOption(Option option) throws Exception;
 
     /**
      * 批量删除
