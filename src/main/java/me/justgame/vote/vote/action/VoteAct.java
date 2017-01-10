@@ -30,4 +30,31 @@ public class VoteAct {
         return modelAndView;
     }
 
+    @RequestMapping("/main.do")
+    public ModelAndView main(String id) throws Exception {
+        ModelAndView modelAndView = new ModelAndView();
+        List<Vote> list = voteService.getVoteAll();
+        modelAndView.addObject("selectId", id);
+        modelAndView.addObject("list", list);
+        modelAndView.setViewName("vote/main");
+        return modelAndView;
+    }
+
+    @RequestMapping("/votePage.do")
+    public ModelAndView votePage(String id) throws Exception {
+        ModelAndView modelAndView = new ModelAndView();
+        Vote vote = voteService.getVoteById(id);
+        modelAndView.addObject("vote", vote);
+        modelAndView.setViewName("vote/votePage");
+        return modelAndView;
+    }
+
+    @RequestMapping("/addVotePage.do")
+    public ModelAndView addVotePage() throws Exception {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("vote/addVote");
+        return modelAndView;
+    }
+
 }

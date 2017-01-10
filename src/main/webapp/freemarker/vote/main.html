@@ -132,7 +132,7 @@
 
         .ui-layout-center{
             background-color: #fff;
-            padding:0px 0px 0px 10px;
+            padding:0px 0px 0px 0px;
         }
         .ui-layout-west{
             padding: 0;
@@ -145,12 +145,21 @@
         .ui-layout-west .add-vote-container a {
             font-weight: bold;
         }
-        .ui-layout-west .menu li {
+        .ui-layout-west .menu a {
+            display: block;
             padding: 15px 0 10px 15px;
+            font-size: 16px;
+            color: #696969;
+            text-decoration: none;
         }
-        .ui-layout-west .menu li:hover {
+
+        .ui-layout-west .menu a:hover {
             background-color: #fff;
             cursor: pointer;
+        }
+        .ui-layout-west .menu a.actived {
+            color: #333;
+            background-color: #fff;
         }
 
         .inner-center{ background:#f5f5f5;}
@@ -170,92 +179,61 @@
     <script>
         $(document).ready(function () {
             $('body').layout({
-                applyDefaultStyles: false//应用默认样式
-//                west_closable: false,
-//                west_resizable: true,
-//                west_size: 50
-//                scrollToBookmarkOnLoad:false,//页加载时滚动到标签
-//                showOverflowOnHover:false,//鼠标移过显示被隐藏的，只在禁用滚动条时用。
-//                north__closable:false,//可以被关闭
-//                north__resizable:false,//可以改变大小
-//                north__size:50,//pane的大小
-//                spacing_open:8,//边框的间隙
-//                spacing_closed:60,//关闭时边框的间隙
-//                resizerTip:"可调整大小",//鼠标移到边框时，提示语
-//                //resizerCursor:"resize-p" 鼠标移上的指针样式
-//                resizerDragOpacity:0.9,//调整大小边框移动时的透明度
-//                maskIframesOnResize:"#ifa",//在改变大小的时候，标记iframe（未通过测试）
-//                sliderTip:"显示/隐藏侧边栏",//在某个Pane隐藏后，当鼠标移到边框上显示的提示语。
-//                sliderCursor:"pointer",//在某个Pane隐藏后，当鼠标移到边框上时的指针样式。
-//                slideTrigger_open:"dblclick",//在某个Pane隐藏后，鼠标触发其显示的事件。(click", "dblclick", "mouseover)
-//                slideTrigger_close:"click",//在某个Pane隐藏后，鼠标触发其关闭的事件。("click", "mouseout")
-//                togglerTip_open:"关闭",//pane打开时，当鼠标移动到边框上按钮上，显示的提示语
-//                togglerTip_closed:"打开",//pane关闭时，当鼠标移动到边框上按钮上，显示的提示语
-//                togglerLength_open:100,//pane打开时，边框按钮的长度
-//                togglerLength_closed:200,//pane关闭时，边框按钮的长度
-//                hideTogglerOnSlide:true,//在边框上隐藏打开/关闭按钮(测试未通过)
-//                togglerAlign_open:"left",//pane打开时，边框按钮显示的位置
-//                togglerAlign_closed:"right",//pane关闭时，边框按钮显示的位置
-//                togglerContent_open:"<div style='background:red'>AAA</div>",//pane打开时，边框按钮中需要显示的内容可以是符号"<"等。需要加入默认css样式.ui-layout-toggler .content
-//                togglerContent_closed:"<img/>",//pane关闭时，同上。
-//                enableCursorHotkey:true,//启用快捷键CTRL或shift + 上下左右。
-//                customHotkeyModifier:"shift",//自定义快捷键控制键("CTRL", "SHIFT", "CTRL+SHIFT"),不能使用alt
-//                south__customHotkey:"shift+0",//自定义快捷键（测试未通过）
-//                fxName:"drop",//打开关闭的动画效果
-//                fxSpeed:"slow",//动画速度
-                //fxSettings: { duration: 500, easing: "bounceInOut" }//自定义动画设置(未通过测试)
-                //initClosed:true,//初始时，所有pane关闭
-                //initHidden:true //初始时，所有pane隐藏
-                //onresize :ons,//调整大小时调用的函数
-                //onshow_start:start,
-                //onshow_end:end
-                /*
-                 其他回调函数
+                applyDefaultStyles: false,//应用默认样式,
+                west__closable: false
+            });
+            // 调用layui的layer模块
+            var layer = null;
+            layui.use(['layer'], function(){
+                layer = layui.layer
+            });
 
-                 显示时调用
-                 onshow = ""
-                 onshow_start = ""
-                 onshow_end = ""
-                 隐藏时调用
-                 onhide = ""
-                 onhide_start = ""
-                 onhide_end = ""
-                 打开时调用
-                 onopen = ""
-                 onopen_start = ""
-                 onopen_end = ""
-                 关闭时调用
-                 onclose = ""
-                 onclose_start = ""
-                 onclose_end = ""
-                 改变大小时调用
-                 onresize = ""
-                 onresize_start = ""
-                 onresize_end = ""
-                 */
+            $('#center_iframe').prop('src', $('.actived').prop('href'));
+            $('.menu').on('click', 'a', function (e) {
+                $(this).addClass('actived').siblings('.actived').removeClass('actived');
+            });
+            $('#add_vote').on('click', function () {
+                layer.open({
+                    type: 2,
+                    title: ['新增投票', 'font-size: 20px;font-weight: bold'],
+                    maxmin: true, // 显示窗口最大化最小化按钮
+                    shadeClose: false, //点击遮罩关闭层
+                    area : ['720px' , '500px'],
+                    content: '/vote/addVotePage.do'
+                });
             });
         });
     </script>
 </head>
 <body>
 
-    <div class="ui-layout-center">Center
-        <p><a href="http://layout.jquery-dev.com/demos.html">Go to the Demos page</a></p>
-        <p>* Pane-resizing is disabled because ui.draggable.js is not linked</p>
-        <p>* Pane-animation is disabled because ui.effects.js is not linked</p>
+    <div class="ui-layout-center">
+        <iframe id="center_iframe" name="center_iframe" src="" width="99%" height="99%" frameborder="0">
+
+        </iframe>
     </div>
 
     <div class="ui-layout-west">
         <div class="add-vote-container">
-            <a href="javascript:void(0);" class="button button-3d button-primary button-rounded addVote">
+            <a id="add_vote" href="javascript:void(0);" class="button button-3d button-primary button-rounded">
                 <span class="glyphicon glyphicon-edit"></span> 发起新投票
             </a>
         </div>
-        <ul class="menu">
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-        </ul>
+        <div class="menu">
+            <#if list??>
+                <#list list as vote>
+                    <#if selectId?? && vote.id==selectId>
+                        <a class="actived" href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
+                            ${vote.subject!}
+                        </a>
+                    <#else>
+                        <a href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
+                            ${vote.subject!}
+                        </a>
+                    </#if>
+                </#list>
+            </#if>
+        </div>
     </div>
 </body>
 </html>

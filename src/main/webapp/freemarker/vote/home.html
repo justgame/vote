@@ -34,17 +34,21 @@
     </style>
 </head>
 <body>
-    <#list list as vote>
-        <div class="container">
-            <p class="subject">${vote.subject!}</p>
-            <ul>
-                <#list vote.options as option>
-                    <li>${option.name!}</li>
-                </#list>
-            </ul>
-        </div>
-    </#list>
-
+    <#if list??>
+        <#list list as vote>
+            <div class="container">
+                <p class="subject">${vote.subject!}</p>
+                <input id="id" type="hidden" value="${vote.id!}">
+                <#if vote.options??>
+                    <ul>
+                        <#list vote.options as option>
+                            <li>${option.name!}</li>
+                        </#list>
+                    </ul>
+                </#if>
+            </div>
+        </#list>
+    </#if>
     <script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
     <script src="/htmldocs/plugins/layui/layui.js"></script>
     <script>
@@ -55,6 +59,9 @@
         });
 
         $('.container').on('click', function () {
+            var url = "/vote/main.do?id=";
+            var id = $(this).find('#id').val();
+            url = url + id;
             //弹出一个iframe层
             layer.open({
                 type: 2,
@@ -62,7 +69,7 @@
                 maxmin: true, // 显示窗口最大化最小化按钮
                 shadeClose: false, //点击遮罩关闭层
                 area : ['820px' , '600px'],
-                content: '/freemarker/vote/main.html'
+                content: url
             });
         });
     </script>
