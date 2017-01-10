@@ -49,8 +49,9 @@
     <script src="/htmldocs/plugins/layui/layui.js"></script>
     <script>
         // 调用layui的layer模块
+        var layer = null;
         layui.use(['layer'], function(){
-            var layer = layui.layer
+            layer = layui.layer
         });
 
         $('.container').on('click', function () {
@@ -58,8 +59,8 @@
             layer.open({
                 type: 2,
                 title: ['投票页面', 'font-size: 20px;font-weight: bold'],
-                maxmin: true,
-                shadeClose: true, //点击遮罩关闭层
+                maxmin: true, // 显示窗口最大化最小化按钮
+                shadeClose: false, //点击遮罩关闭层
                 area : ['820px' , '600px'],
                 content: '/freemarker/vote/main.html'
             });
