@@ -127,7 +127,7 @@
                 <label for="endTime">截止时间: </label>
             </div>
             <div class="content4">
-                <p><input id="endTime" name="endTime" type="text" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowWeek:true,readOnly:true,minDate:'%y-%M-{%d+1} %H:%m:%s'})" required></p>
+                <p><input id="endTime" name="endTime" type="text" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowWeek:true,isShowToday:false,readOnly:true,minDate:'%y-%M-{%d+1} %H:%m:%s'})" required></p>
             </div>
         </div>
         <div class="panel bottom-panel">
@@ -184,6 +184,8 @@
             $('#cancel').on('click', closeWindow);
 
             $('form').submit(function (event) {
+                // TODO 这里使用ajax提交
+
                 // window.event.returnValue = null;
                 event.preventDefault();
                 closeWindow();
