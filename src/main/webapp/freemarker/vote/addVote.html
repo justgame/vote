@@ -2,12 +2,183 @@
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>新增投票</title>
+    <link rel="stylesheet" href="/htmldocs/plugins/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/htmldocs/css/buttons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .panel {
+            width: 680px;
+            margin: 0;
+            padding: 10px;
+        }
+        .panel1 {
+            height: 80px;
+        }
+        .title {
+            float: left;
+            width: 82px;
+            height: 20px;
+        }
+        .content1 {
+            float: right;
+            width: 560px;
+            height: 80px;
+        }
+        .panel2 {
+            height: 176px;
+        }
+        .content2 {
+            float: right;
+            width: 560px;
+            height:156px;
+        }
+        form label {
+            font-family: 宋体, Geneva, Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        textarea.subject {
+            width: 550px;
+            height: 60px;
+            vertical-align: top;
+            resize: none;
+            font-size: 16px;
+        }
+        p {
+            position: relative;
+            margin-bottom: 18px;
+        }
+        p .option {
+            width: 549px;
+            height: 24px;
+            font-size: 16px;
+        }
+        p span.close {
+            position: absolute;
+            left: 100%;
+            width: 10px;
+            height: 24px;
+        }
+        .content2 a {
+            font-size: 12px;
+            text-decoration: none;
+            color: blue;
+        }
+        .panel3 {
+            height: 60px;
+        }
+        .content3 {
+            float: right;
+            width: 560px;
+            height: 40px;
+        }
+        .panel4 {
+            height: 60px;
+        }
+        .content4 {
+            float: right;
+            width: 560px;
+            height: 40px;
+        }
+        .bottom-panel {
+            border-top: 1px solid silver;
+        }
+        .bottom-panel p {
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
-投票主题
-<textarea >
+    <form>
+        <div class="panel panel1">
+            <div class="title">
+                <label for="subject">投票主题: </label>
+            </div>
+            <div class="content1">
+                <textarea class="subject" id="subject" maxlength="100" placeholder="请填写投票内容说明(不超过80个字)" required></textarea>
+            </div>
+        </div>
+        <div class="panel panel2">
+            <div class="title">
+                <label>投票选项: </label>
+            </div>
+            <div class="content2">
+                <p><input class="option" name="option" maxlength="60" placeholder="选项1"></p>
+                <p><input class="option" name="option" maxlength="60" placeholder="选项2"></p>
+                <p><input class="option" name="option" maxlength="60" placeholder="选项3"></p>
+                <a id="add_option" href="javascript:void(0);">添加选项</a>
+            </div>
+        </div>
+        <div class="panel panel3">
+            <div class="title">
+                <label>选择模式: </label>
+            </div>
+            <div class="content3">
+                <p><input name="mode" type="radio">单选&nbsp;&nbsp;&nbsp;&nbsp;<input name="mode" type="radio">多选</p>
+            </div>
+        </div>
+        <div class="panel panel4">
+            <div class="title">
+                <label for="endTime">截止时间: </label>
+            </div>
+            <div class="content4">
+                <p><input id="endTime" name="endTime" type="text" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowWeek:true,readOnly:true,minDate:'%y-%M-{%d+1} %H:%m:%s'})" required></p>
+            </div>
+        </div>
+        <div class="panel bottom-panel">
+            <p><a id="submit" href="javascript:void(0);" class="button button-primary button-rounded button-tiny">确定</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a id="cancel" href="javascript:void(0);" class="button button-rounded button-tiny">取消</a>
+        </div>
+    </form>
+    <script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
+    <script src="/htmldocs/plugins/My97DatePicker/WdatePicker.js"></script>
+    <script>
+        $(function () {
+            var $options = $('.option');
 
-</textarea>
+            $.each($options, function (index, item) {
+               if (index > 1) {
+                   var $span = $('<span class="close"><span class="glyphicon glyphicon-remove"></span></span>');
+                   $span.appendTo($('.content2').find('p').eq(index));
+               }
+            });
+
+            $('.content2').on('click', '.close', function () {
+                $('.content2').find('p').last().remove();
+                var $panel2 = $('.panel2'),
+                    $content2 = $('.content2'),
+                    panel2H = $panel2.css('height'),
+                    content2H = $content2.css('height');
+                $panel2.css('height', parseInt(panel2H) - 42 + 'px');
+                $content2.css('height', parseInt(content2H) - 42 + 'px');
+            });
+
+            $('#add_option').on('click', function () {
+                var $newOption = $('<p><input class="option" name="option" maxlength="60"></p>'),
+                    $options = $('.option'),
+                    $panel2 = $('.panel2'),
+                    $content2 = $('.content2'),
+                    num = $options.length + 1,
+                    panel2H = $panel2.css('height'),
+                    content2H = $content2.css('height');
+                $newOption.find('.option').attr('placeholder', '选项' + num);
+                $panel2.css('height', parseInt(panel2H) + 42 + 'px');
+                $content2.css('height', parseInt(content2H) + 42 + 'px');
+                $newOption.insertAfter($content2.find('p').last());
+                var $span = $('<span class="close"><span class="glyphicon glyphicon-remove"></span></span>');
+                $span.appendTo($newOption);
+            });
+
+            $('#cancel').on('click', function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
+        })
+    </script>
 </body>
 </html>

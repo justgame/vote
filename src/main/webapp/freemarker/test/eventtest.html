@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>测试一下jquery事件的使用</title>
+</head>
+<body>
+<div>
+    <p>测试1</p>
+    <p>测试2</p>
+    <p>测试3</p>
+</div>
+<button>新增一个</button>
+<script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
+<script>
+    $(function () {
+        var index = 4;
+        $('div').on('click', function () {
+            alert('div clicked');
+        })
+        $('div').on('click', 'p', function () {
+            alert($(this).text());
+        });
+        $('button').click(function () {
+            var text = '测试' + index;
+            $('<p></p>').text(text).appendTo('div');
+            index++;
+        });
+    });
+</script>
+</body>
+</html>

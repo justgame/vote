@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>测试div排版</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    .one {
+        width: 504px;
+        height: 502px;
+        margin: 0 auto;
+        border: 1px solid silver;
+    }
+    .two {
+        float: left;
+        width: 250px;
+        height: 500px;
+        border: 1px solid black;
+    }
+    .three {
+        float: right;
+        width: 250px;
+        height: 500px;
+        border: 1px solid blue;
+    }
+    .three1 {
+        width: 248px;
+        height: 248px;
+        border: 1px solid red;
+    }
+    .three2 {
+        width: 248px;
+        height: 248px;
+        border: 1px solid yellow;
+    }
+    .four {
+        width: 500px;
+        height: 500px;
+        margin: 0 auto;
+        border: 1px solid silver;
+    }
+    .left {
+        float: left;
+        width: 50%;
+        /*border: 1px solid blue;*/
+    }
+    .right {
+        float: right;
+        width: 50%;
+        /*border: 1px solid red;*/
+    }
+
+</style>
+<body>
+<div class="one">
+    <div class="two"></div>
+    <div class="three">
+        <div class="three1"></div>
+        <div class="three2"></div>
+    </div>
+</div>
+<div class="four">
+    <div class="left">左</div><div class="right">右</div>
+</div>
+
+
+</body>
+</html>
