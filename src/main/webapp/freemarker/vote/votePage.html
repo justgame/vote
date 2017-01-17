@@ -95,9 +95,6 @@
                         totalW = $item.css('width'),
                         totalH = $item.css('height'),
                         spanW = percent * parseInt(totalW) + 'px';
-                    console.log(totalH);
-                    console.log(percent);
-                    console.log(spanW);
                     $span.css({'position' : 'absolute', 'left' : 0, 'top' : 0,'width' : spanW, 'height' : totalH, 'background-color' : '#11ccff', 'z-index' : -1});
                     $('.vote_con_container').css('padding-bottom', '30px');
                 });
@@ -133,25 +130,33 @@
             });
 
             $('.vote_oth_container').on('click', 'a', function () {
-                $.ajax({
-                    url : "/vote/delVote.do",
-                    type : "GET",
-                    data : {id : $('#id').val()},
-                    dataType : "text",
-                    success : function (result) {
-                        if (result == 'success') {
-                            parent.parent.location.reload();
-                        } else {
-                            layer.msg("删除失败！", function () {
+                layer.confirm('确定删除该投票？', {
+                    btn: ['确定', '取消']// 按钮
+                },
+                function () {
+                    $.ajax({
+                        url : "/vote/delVote.do",
+                        type : "GET",
+                        data : {id : $('#id').val()},
+                        dataType : "text",
+                        success : function (result) {
+                            if (result == 'success') {
+                                parent.parent.location.reload();
+                            } else {
+                                layer.msg("删除失败！", function () {
+
+                                });
+                            }
+                        },
+                        error : function () {
+                            layer.msg("出错了！", function () {
 
                             });
                         }
-                    },
-                    error : function () {
-                        layer.msg("出错了！", function () {
+                    });
+                },
+                function () {
 
-                        });
-                    }
                 });
             });
         });

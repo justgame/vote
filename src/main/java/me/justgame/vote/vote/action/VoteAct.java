@@ -48,6 +48,10 @@ public class VoteAct {
     public ModelAndView votePage(String id, HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         Vote vote = voteService.getVoteById(id);
+        if (vote == null) {
+            modelAndView.setViewName("exception/404");
+            return modelAndView;
+        }
 
         // 判断展示投票结果还是展示投票选择 true.投票结果 false.投票选择
         boolean status = true;

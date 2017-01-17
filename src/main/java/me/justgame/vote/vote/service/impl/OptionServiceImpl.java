@@ -41,7 +41,11 @@ public class OptionServiceImpl implements OptionService {
                 continue;
             Option option = new Option();
             option.setId(IdUtil.getUID());
-            option.setName(name[i]);
+            // 防止xss攻击
+            String fName = name[i];
+            fName = fName.replace("<", "&lt;");
+
+            option.setName(fName);
             option.setVoteId(voteId);
             option.setCounts(0);
             option.setSortNo(i);

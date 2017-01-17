@@ -112,6 +112,11 @@ public class VoteServiceImpl implements VoteService {
             String voteId = IdUtil.getUID();
             vote.setId(voteId);
             vote.setStartTime(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+            // 防止xss攻击
+            String subject = vote.getSubject();
+            subject = subject.replace("<", "%lt;");
+            vote.setSubject(subject);
+
             voteDao.addVote(vote);
             optionService.addOption(option, voteId);
             commonResult.setFlag(true);
