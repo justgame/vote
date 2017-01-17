@@ -9,6 +9,8 @@
         <result property="startTime" column="START_TIME" />
         <result property="endTime" column="END_TIME" />
         <result property="author" column="AUTHOR" />
+        <result property="mode" column="MODE" />
+        <result property="maxVoteNum" column="MAX_VOTE_NUM" />
     </resultMap>
 
     <sql id="allColumns">
@@ -16,12 +18,15 @@
         SUBJECT,
         START_TIME,
         END_TIME,
-        AUTHOR
+        AUTHOR,
+        MODE,
+        MAX_VOTE_NUM
     </sql>
 
     <select id="getAllVote" resultMap="VoteResultMap">
         SELECT <include refid="allColumns"/>
           FROM VOTE
+        ORDER BY START_TIME DESC
     </select>
 
     <select id="getVoteById" parameterType="String" resultMap="VoteResultMap">
@@ -39,9 +44,12 @@
               #{subject},
               #{startTime},
               #{endTime},
-              #{author}
+              #{author},
+              #{mode},
+              #{maxVoteNum}
           )
     </insert>
+
 
     <delete id="delVote" parameterType="String">
         DELETE
@@ -57,6 +65,18 @@
              #{id}
          </foreach>
     </delete>
+
+    <select id="getVoteTotalCounts" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+          FROM ( SELECT *
+                   FROM OPTION_USER_RELATE
+                  WHERE OPTION_ID IN (
+                    SELECT ID
+                      FROM OPTION
+                     WHERE VOTE_ID=#{id}
+                  )
+          )
+    </select>
 
 
 </mapper>

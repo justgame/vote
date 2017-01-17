@@ -7,14 +7,19 @@
         <result property="id" column="ID" />
         <result property="name" column="NAME" />
         <result property="voteId" column="VOTE_ID" />
-        <result property="counts" column="COUNTS" />
+        <result property="sortNo" column="sortNo" />
+    </resultMap>
+
+    <resultMap id="OptionUserRelateResultMap" type="me.justgame.vote.vote.model.OptionUserRelate">
+        <result property="optionId" column="OPTION_ID" />
+        <result property="userName" column="USER_NAME" />
     </resultMap>
 
     <sql id="allColumns">
         ID,
         NAME,
         VOTE_ID,
-        COUNTS
+        SORT_NO
     </sql>
 
     <select id="getOptionAll" parameterType="String" resultMap="OptionResultMap">
@@ -25,6 +30,7 @@
                  AND VOTE_ID = #{value}
              </if>
          </where>
+        ORDER BY SORT_NO ASC NULLS LAST
     </select>
 
     <select id="getOptionById" parameterType="String" resultMap="OptionResultMap">
@@ -41,22 +47,15 @@
             #{id},
             #{name},
             #{voteId},
-            #{counts}
+            #{sortNo}
           )
     </insert>
 
-    <update id="editOption" parameterType="me.justgame.vote.vote.model.Option">
-        UPDATE OPTION
-         <set>
-              <if test="name!=null">
-                  NAME = #{name},
-              </if>
-              <if test="counts!=null">
-                  COUNTS = #{counts},
-              </if>
-         </set>
-        WHERE ID = #{id}
-    </update>
+    <delete id="delOptionByVoteId" parameterType="String">
+        DELETE
+          FROM OPTION
+         WHERE VOTE_ID=#{id}
+    </delete>
 
     <delete id="delOptionBatch" parameterType="java.util.List">
         DELETE
@@ -67,5 +66,39 @@
          </foreach>
     </delete>
 
+    <select id="getOptionVoteCounts" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+          FROM OPTION_USER_RELATE
+         WHERE OPTION_ID=#{id}
+    </select>
+
+    <insert id="addVote4Option" parameterType="me.justgame.vote.vote.model.OptionUserRelate">
+        INSERT
+          INTO OPTION_USER_RELATE (
+            OPTION_ID,
+            USER_NAME
+          ) VALUES (
+            #{optionId},
+            #{userName}
+          )
+    </insert>
+
+    <select id="getUserVoted" parameterType="String" resultType="String">
+        SELECT DISTINCT USER_NAME
+          FROM OPTION_USER_RELATE
+         WHERE OPTION_ID IN (SELECT ID
+                               FROM OPTION
+                              WHERE VOTE_ID=#{id}
+                            )
+    </select>
+
+    <delete id="delOptionUserRelByVoteId" parameterType="String">
+        DELETE
+          FROM OPTION_USER_RELATE
+         WHERE OPTION_ID IN (SELECT ID
+                               FROM OPTION
+                              WHERE VOTE_ID=#{id}
+                            )
+    </delete>
 
 </mapper>

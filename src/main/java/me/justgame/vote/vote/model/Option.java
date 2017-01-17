@@ -8,6 +8,8 @@ public class Option {
     private String name;
     private String voteId;
     private Integer counts;
+    private Integer sortNo;
+    private Double percent;
 
     public String getId() {
         return id;
@@ -39,6 +41,22 @@ public class Option {
 
     public void setCounts(Integer counts) {
         this.counts = counts;
+    }
+
+    public Integer getSortNo() {
+        return sortNo;
+    }
+
+    public void setSortNo(Integer sortNo) {
+        this.sortNo = sortNo;
+    }
+
+    public Double getPercent() {
+        return percent;
+    }
+
+    public void setPercent(Double percent) {
+        this.percent = percent;
     }
 
     @Override

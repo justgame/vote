@@ -1,9 +1,12 @@
 package me.justgame.vote.vote.service.impl;
 
+import me.justgame.vote.common.utils.IdUtil;
 import me.justgame.vote.vote.dao.OptionDao;
 import me.justgame.vote.vote.model.Option;
 import me.justgame.vote.vote.service.OptionService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -17,16 +20,33 @@ public class OptionServiceImpl implements OptionService {
     private OptionDao optionDao;
 
     @Override
-    public void countsPlus(String id) throws Exception {
-        Option option = optionDao.getOptionById(id);
-        int counts = option.getCounts() != null ? option.getCounts() + 1 : 1;
-        option.setCounts(counts);
-        optionDao.editOption(option);
+    public void addOption(String name, String voteId) throws Exception {
+        if (StringUtils.isBlank(name) || StringUtils.isBlank(voteId))
+            return;
+        Option option = new Option();
+        option.setId(IdUtil.getUID());
+        option.setName(name);
+        option.setVoteId(voteId);
+        option.setCounts(0);
+        optionDao.addOption(option);
     }
 
+    @Transactional
     @Override
-    public void countsPlus(Option option) throws Exception {
-        String id = option.getId();
-        countsPlus(id);
+    public void addOption(String[] name, String voteId) throws Exception {
+        if (name == null || name.length == 0 || StringUtils.isBlank(voteId))
+            return;
+        for (int i = 0, j = name.length; i < j; i++) {
+            if (StringUtils.isBlank(name[i]))
+                continue;
+            Option option = new Option();
+            option.setId(IdUtil.getUID());
+            option.setName(name[i]);
+            option.setVoteId(voteId);
+            option.setCounts(0);
+            option.setSortNo(i);
+            optionDao.addOption(option);
+        }
     }
+
 }

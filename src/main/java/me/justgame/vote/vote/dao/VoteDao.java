@@ -46,4 +46,12 @@ public interface VoteDao {
      * @throws Exception
      */
     int delVoteBatch(List<String> list) throws Exception;
+
+    /**
+     * 获取投票总数
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int getVoteTotalCounts(String id) throws Exception;
 }

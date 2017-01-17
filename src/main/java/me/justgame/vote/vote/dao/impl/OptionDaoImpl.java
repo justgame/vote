@@ -3,6 +3,7 @@ package me.justgame.vote.vote.dao.impl;
 import me.justgame.vote.vote.dao.OptionDao;
 import me.justgame.vote.vote.dao.mapper.OptionMapper;
 import me.justgame.vote.vote.model.Option;
+import me.justgame.vote.vote.model.OptionUserRelate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -32,12 +33,32 @@ public class OptionDaoImpl implements OptionDao {
     }
 
     @Override
-    public int editOption(Option option) throws Exception {
-        return mapper.editOption(option);
+    public int delOptionByVoteId(String id) throws Exception {
+        return mapper.delOptionByVoteId(id);
     }
 
     @Override
     public int delOptionBatch(List<String> list) throws Exception {
         return mapper.delOptionBatch(list);
+    }
+
+    @Override
+    public int getOptionVoteCounts(String id) throws Exception {
+        return mapper.getOptionVoteCounts(id);
+    }
+
+    @Override
+    public int addVote4Option(OptionUserRelate optionUserRelate) throws Exception {
+        return mapper.addVote4Option(optionUserRelate);
+    }
+
+    @Override
+    public List<String> getUserVoted(String id) throws Exception {
+        return mapper.getUserVoted(id);
+    }
+
+    @Override
+    public int delOptionUserRelByVoteId(String id) throws Exception {
+        return mapper.delOptionUserRelByVoteId(id);
     }
 }

@@ -23,7 +23,18 @@
     <context:component-scan base-package="me.justgame.vote"/>
 
     <!-- 注解驱动  -->
-    <mvc:annotation-driven></mvc:annotation-driven>
+    <!-- 处理请求时返回json字符串的中文乱码问题 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
     <!-- 引入外部配置文件  -->
     <context:property-placeholder location="classpath:jdbc.properties"/>

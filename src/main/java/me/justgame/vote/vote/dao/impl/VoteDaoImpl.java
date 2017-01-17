@@ -41,4 +41,9 @@ public class VoteDaoImpl implements VoteDao {
     public int delVoteBatch(List<String> list) throws Exception {
         return mapper.delVoteBatch(list);
     }
+
+    @Override
+    public int getVoteTotalCounts(String id) throws Exception {
+        return mapper.getVoteTotalCounts(id);
+    }
 }

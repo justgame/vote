@@ -6,6 +6,7 @@
     <title>新增投票</title>
     <link rel="stylesheet" href="/htmldocs/plugins/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/htmldocs/css/buttons.css">
+    <link rel="stylesheet" href="/htmldocs/plugins/layui/css/layui.css">
     <style>
         * {
             margin: 0;
@@ -41,6 +42,11 @@
             font-family: 宋体, Geneva, Arial, Helvetica, sans-serif;
             font-size: 18px;
             font-weight: 500;
+            cursor: pointer;
+        }
+        form label.chooseLabel {
+            font-size: 16px;
+            font-weight: 300;
         }
         textarea.subject {
             width: 550px;
@@ -91,6 +97,18 @@
         .bottom-panel p {
             text-align: right;
         }
+        input[type='radio'] {
+            cursor: pointer;
+        }
+        span.multiple_hide {
+            display: none;
+        }
+        span.multiple_hide input {
+            width: 40px;
+            height: 22px;
+            font-size: 16px;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +118,7 @@
                 <label for="subject">投票主题: </label>
             </div>
             <div class="content1">
-                <textarea class="subject" id="subject" maxlength="100" placeholder="请填写投票内容说明(不超过80个字)" required></textarea>
+                <textarea class="subject" id="subject" name="subject" maxlength="100" placeholder="请填写投票内容说明(不超过80个字)" required></textarea>
             </div>
         </div>
         <div class="panel panel2">
@@ -119,7 +137,17 @@
                 <label>选择模式: </label>
             </div>
             <div class="content3">
-                <p><input name="mode" type="radio" required>单选&nbsp;&nbsp;&nbsp;&nbsp;<input name="mode" type="radio" required>多选</p>
+                <p>
+                    <input id="single" class="choose" name="mode" type="radio" value="0" required><label class="chooseLabel" for="single">单选</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input id="multiple" class="choose" name="mode" type="radio" value="1" required><label class="chooseLabel" for="multiple">多选</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="multiple_hide">
+                        <label class="chooseLabel" for="maxVoteNum">最多选</label>
+                        <input id="maxVoteNum" type="number" name="maxVoteNum" min="1">
+                        <label class="chooseLabel" for="maxVoteNum">项</label>
+                    </span>
+                </p>
             </div>
         </div>
         <div class="panel panel4">
@@ -138,7 +166,13 @@
     </form>
     <script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
     <script src="/htmldocs/plugins/My97DatePicker/WdatePicker.js"></script>
+    <script src="/htmldocs/plugins/layui/layui.js"></script>
     <script>
+        var layer = null;
+        layui.use(['layer'], function(){
+            layer = layui.layer
+        });
+
         // 关闭窗口
         function closeWindow() {
             var index = parent.layer.getFrameIndex(window.name);
@@ -146,21 +180,23 @@
         }
 
         $(function () {
-            var $options = $('.option');
-
-            $.each($options, function (index, item) {
-               if (index > 1) {
-                   var $span = $('<span class="close"><span class="glyphicon glyphicon-remove"></span></span>');
-                   $span.appendTo($('.content2').find('p').eq(index));
-               }
-            });
+            // 初始化一些样式
+            (function () {
+                var $options = $('.option');
+                $.each($options, function (index, item) {
+                    if (index > 1) {
+                        var $span = $('<span class="close"><span class="glyphicon glyphicon-remove"></span></span>');
+                        $span.appendTo($('.content2').find('p').eq(index));
+                    }
+                });
+            })();
 
             $('.content2').on('click', '.close', function () {
-                $('.content2').find('p').last().remove();
                 var $panel2 = $('.panel2'),
                     $content2 = $('.content2'),
                     panel2H = $panel2.css('height'),
                     content2H = $content2.css('height');
+                $content2.find('p').last().remove();
                 $panel2.css('height', parseInt(panel2H) - 42 + 'px');
                 $content2.css('height', parseInt(content2H) - 42 + 'px');
             });
@@ -181,14 +217,54 @@
                 $span.appendTo($newOption);
             });
 
+            $('.choose').on('change', function () {
+                var items = $('.choose');
+                if (items.eq(1).prop('checked')) {
+                   $('.multiple_hide').show();
+               } else {
+                    $('.multiple_hide').hide();
+                }
+            });
+
+            $('#maxVoteNum').on('focus', function () {
+                var count = 0;
+                var $options = $('.option');
+                $.each($options, function (index, item) {
+                    if ($(item).val())
+                        count++;
+                });
+                $(this).attr('max', count);
+            });
+
             $('#cancel').on('click', closeWindow);
 
             $('form').submit(function (event) {
-                // TODO 这里使用ajax提交
+                $.ajax({
+                    url : '/vote/addVote.do',
+                    type : 'post',
+                    asyn : false,
+                    data : $('form').serialize(),
+                    dataType : 'json',
+                    success : function (result) {
+                        if (result.flag) {
+                            closeWindow();
+                            parent.location.reload();
+                            parent.parent.location.reload();
+                        } else if (result.msg) {
+                            layer.msg(result.msg);
+                        } else {
+                            layer.msg('添加新投票时出错！');
+                        }
+                    },
+                    error : function () {
+                        layer.msg('添加新投票时出错！');
+                    }
 
-                // window.event.returnValue = null;
+                });
+
                 event.preventDefault();
-                closeWindow();
+                // window.event.returnValue = null;
+                //closeWindow();
             });
         });
     </script>

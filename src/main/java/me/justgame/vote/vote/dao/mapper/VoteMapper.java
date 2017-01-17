@@ -20,4 +20,6 @@ public interface VoteMapper {
     int delVote(String id) throws Exception;
 
     int delVoteBatch(List<String> list) throws Exception;
+
+    int getVoteTotalCounts(String id) throws Exception;
 }

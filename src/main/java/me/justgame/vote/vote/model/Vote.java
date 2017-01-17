@@ -23,6 +23,14 @@ public class Vote {
     private String author;
     // 投票选项
     private List<Option> options;
+    // 选择模式(0.单选 1.多选)
+    private String mode;
+    // 最大选择项数
+    private Integer maxVoteNum;
+    // 已投票数
+    private Integer counts;
+    // 是否过期
+    private boolean expired;
 
     public String getId() {
         return id;
@@ -70,6 +78,38 @@ public class Vote {
 
     public void setOptions(List<Option> options) {
         this.options = options;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public Integer getMaxVoteNum() {
+        return maxVoteNum;
+    }
+
+    public void setMaxVoteNum(Integer maxVoteNum) {
+        this.maxVoteNum = maxVoteNum;
+    }
+
+    public Integer getCounts() {
+        return counts;
+    }
+
+    public void setCounts(Integer counts) {
+        this.counts = counts;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 
     @Override

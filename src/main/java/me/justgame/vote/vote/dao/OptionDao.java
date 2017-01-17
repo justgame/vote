@@ -1,6 +1,7 @@
 package me.justgame.vote.vote.dao;
 
 import me.justgame.vote.vote.model.Option;
+import me.justgame.vote.vote.model.OptionUserRelate;
 
 import java.util.List;
 
@@ -33,12 +34,12 @@ public interface OptionDao {
     int addOption(Option option) throws Exception;
 
     /**
-     * 编辑选项
-     * @param option
+     * 根据投票的id删除所有选项
+     * @param id
      * @return
      * @throws Exception
      */
-    int editOption(Option option) throws Exception;
+    int delOptionByVoteId(String id) throws Exception;
 
     /**
      * 批量删除
@@ -47,4 +48,36 @@ public interface OptionDao {
      * @throws Exception
      */
     int delOptionBatch(List<String> list) throws Exception;
+
+    /**
+     * 获取选项投票数
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int getOptionVoteCounts(String id) throws Exception;
+
+    /**
+     * 为选项投票
+     * @param optionUserRelate
+     * @return
+     * @throws Exception
+     */
+    int addVote4Option(OptionUserRelate optionUserRelate) throws Exception;
+
+    /**
+     * 获取投过票的用户列表
+     * @param id vote的id
+     * @return
+     * @throws Exception
+     */
+    List<String> getUserVoted(String id) throws Exception;
+
+    /**
+     * 删除投票相关联的选项的投票信息
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int delOptionUserRelByVoteId(String id) throws Exception;
 }

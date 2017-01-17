@@ -31,9 +31,21 @@
             list-style: circle;
             font-size: 16px;
         }
+        a.enter_main {
+            display: block;
+            width: 140px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid silver;
+            border-radius: 5px;
+            font-size: 20px;
+            text-align: center;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
+    <a class="enter_main" href="javascript:void(0);">进入投票页面</a>
     <#if list??>
         <#list list as vote>
             <div class="container">
@@ -56,6 +68,18 @@
         var layer = null;
         layui.use(['layer'], function(){
             layer = layui.layer
+        });
+
+        $('.enter_main').on('click', function () {
+            //弹出一个iframe层
+            layer.open({
+                type: 2,
+                title: ['投票页面', 'font-size: 20px;font-weight: bold'],
+                maxmin: true, // 显示窗口最大化最小化按钮
+                shadeClose: false, //点击遮罩关闭层
+                area : ['820px' , '600px'],
+                content: "/vote/main.do"
+            });
         });
 
         $('.container').on('click', function () {

@@ -6,6 +6,7 @@
     <title>投票页面</title>
     <link rel="stylesheet" href="/htmldocs/plugins/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/htmldocs/css/buttons.css">
+    <link rel="stylesheet" href="/htmldocs/plugins/layui/css/layui.css">
     <style>
         * {
             margin: 0;
@@ -13,16 +14,37 @@
             font-family: 宋体;
             font-size: 16px;
         }
+        .left {
+            float: left;
+        }
+        .right {
+            float: right;
+        }
         h1 {
             font-size: 20px;
-            font-family: 宋体;
             margin: 20px 0 20px 10px;
+            vertical-align: bottom;
+        }
+        h1 span {
+            float: right;
+            padding: 3px;
+            font-weight: 600;
+        }
+        span.doing {
+            background-color: #ff8a40;
+            color: white;
+        }
+        span.end {
+            color: #a6acab;
         }
         div.vote_con_container {
+            margin-top: 40px;
             margin-left: 10px;
             border-bottom: 1px solid silver;
         }
-        li {
+        li,
+        p {
+            position: relative;
             margin:1px 0;
             padding: 10px 16px;
             list-style: none;
@@ -32,44 +54,173 @@
             background-color: #d9d9d9;
             cursor: pointer;
         }
+
         div.vote_btn_container {
             margin: 30px 0;
             text-align: center;
         }
         div.vote_oth_container {
+            height: 20px;
             margin: 10px 0 0 10px;
         }
-        span.end_time {
-            float: right;
+        span.time {
             color: #999;
             font-size: 12px;
         }
+        span.mode_message {
+            display: inline-block;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+        .vote_oth_container a {
+            font-size: 12px;
+            color: blue;
+            text-decoration: none;
+        }
     </style>
     <script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
+    <script src="/htmldocs/plugins/layui/layui.js"></script>
     <script>
+        var layer = null;
+        layui.use(['layer'], function(){
+            layer = layui.layer
+        });
         $(function () {
+            if ($('#status').val()) {
+                var $lis = $('.vote_con_container').find('p');
+                $.each($lis, function (index, item) {
+                    var $item = $(item),
+                        percent = $item.data('percent'),
+                        $span = $item.find('span'),
+                        totalW = $item.css('width'),
+                        totalH = $item.css('height'),
+                        spanW = percent * parseInt(totalW) + 'px';
+                    console.log(totalH);
+                    console.log(percent);
+                    console.log(spanW);
+                    $span.css({'position' : 'absolute', 'left' : 0, 'top' : 0,'width' : spanW, 'height' : totalH, 'background-color' : '#11ccff', 'z-index' : -1});
+                    $('.vote_con_container').css('padding-bottom', '30px');
+                });
+            }
+
             $('li').click(function () {
                 $(this).find('input[type="radio"]').prop('checked', 'true');
+                if ($('#mode').val() != '0') {
+                    var maxVoteNum = $('#maxVoteNum').val();
+                    var $checkbox = $(this).find('input[type="checkbox"]');
+                    var status =  $checkbox.prop('checked');
+                    if (!status) {
+                        if ($('input[type="checkbox"]:checked').length >= maxVoteNum) {
+                            layer.alert("最多可选" + maxVoteNum + "项");
+                            return;
+                        }
+                        $checkbox.prop('checked', true);
+                        return;
+                    }
+                    $checkbox.prop('checked', false);
+                }
+
+            });
+
+            $('form').submit( function () {
+                if ($('#mode').val() != '0'){
+                    var selectCounts = $('input[type="checkbox"]:checked');
+                    if  (selectCounts.length == 0) {
+                        layer.alert("必须选择至少一个选项");
+                        return false;
+                    }
+                }
+            });
+
+            $('.vote_oth_container').on('click', 'a', function () {
+                $.ajax({
+                    url : "/vote/delVote.do",
+                    type : "GET",
+                    data : {id : $('#id').val()},
+                    dataType : "text",
+                    success : function (result) {
+                        if (result == 'success') {
+                            parent.parent.location.reload();
+                        } else {
+                            layer.msg("删除失败！", function () {
+
+                            });
+                        }
+                    },
+                    error : function () {
+                        layer.msg("出错了！", function () {
+
+                        });
+                    }
+                });
             });
         });
     </script>
 </head>
 <body>
-    <h1>${vote.subject!}</h1>
-    <div class="vote_con_container">
-        <#if vote.options??>
-            <ul>
-                <#list vote.options as option>
-                    <li><input type="radio" name="choose" value="${option.id!}">&nbsp;${option.name!}</li>
-                </#list>
-            </ul>
+    <input id="id" type="hidden" value="${vote.id!}">
+    <input id="mode" type="hidden" value="${vote.mode!}">
+    <input id="maxVoteNum" type="hidden" value="${vote.maxVoteNum!'2'}">
+    <input id="status" type="hidden" value="${status!false}">
+    <h1>
+        ${vote.author!}
+        <#if process=="doing">
+            <span class="doing">进行中</span>
+        <#else>
+            <span class="end">已结束</span>
         </#if>
-        <div class="vote_btn_container">
-            <a href="javascript:void(0);" class="button button-glow button-rounded button-raised button-primary">投票</a>
-        </div>
-    </div>
+    </h1>
     <div class="vote_oth_container">
-        <span class="end_time">截止时间:${vote.endTime}</span>
+        <span class="time left">${vote.startTime}</span>
+    </div>
+
+    <h1>${vote.subject!}</h1>
+    <#if status?? && !status>
+        <div class="vote_con_container">
+            <#if vote.mode?? && vote.mode=="0">
+                <span class="mode_message">单选</span>
+            <#else>
+                <span class="mode_message">多选，最多选择${vote.maxVoteNum!'2'}项</span>
+            </#if>
+            <form action="/vote/vote.do" method="post">
+                <#if vote.options??>
+                    <input name="voteId" type="hidden" value="${vote.id!}">
+                    <ul>
+                        <#if vote.mode?? && vote.mode=="0">
+                            <#list vote.options as option>
+                                <li><input type="radio" name="choose" value="${option.id!}" required>&nbsp;${option.name!}</li>
+                            </#list>
+                            <#else>
+                                <#list vote.options as option>
+                                    <li><input type="checkbox" name="choose" value="${option.id!}">&nbsp;${option.name!}</li>
+                                </#list>
+                        </#if>
+                    </ul>
+                </#if>
+                <div class="vote_btn_container">
+                    <input type="submit" class="button button-glow button-rounded button-raised button-primary" value="投票">
+                </div>
+            </form>
+        </div>
+    <#else>
+        <div class="vote_con_container">
+            <#if vote.mode?? && vote.mode=="0">
+                <span class="mode_message">单选</span>
+                <#else>
+                    <span class="mode_message">多选，最多选择${vote.maxVoteNum!'2'}项</span>
+            </#if>
+            <#if vote.options??>
+                <#list vote.options as option>
+                    <p class="voted-li" data-percent="${option.percent!0}"><span></span>&nbsp;&nbsp;${option.name!}</p>
+                </#list>
+            </#if>
+        </div>
+    </#if>
+    <div class="vote_oth_container">
+        <#if isAuthor?? && isAuthor>
+            <a href="javascript:void(0);"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span> 删除投票</a>
+        </#if>
+        <span class="time right">截止时间:${vote.endTime}</span>
     </div>
 
 

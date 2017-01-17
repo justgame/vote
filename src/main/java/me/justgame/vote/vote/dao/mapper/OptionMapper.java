@@ -2,6 +2,7 @@ package me.justgame.vote.vote.dao.mapper;
 
 import me.justgame.vote.common.annotations.MyBatisMapper;
 import me.justgame.vote.vote.model.Option;
+import me.justgame.vote.vote.model.OptionUserRelate;
 
 import java.util.List;
 
@@ -17,8 +18,16 @@ public interface OptionMapper {
 
     int addOption(Option option) throws Exception;
 
-    int editOption(Option option) throws Exception;
+    int delOptionByVoteId(String id) throws Exception;
 
     int delOptionBatch(List<String> list) throws Exception;
+
+    int getOptionVoteCounts(String id) throws Exception;
+
+    int addVote4Option(OptionUserRelate optionUserRelate) throws Exception;
+
+    List<String> getUserVoted(String id) throws Exception;
+
+    int delOptionUserRelByVoteId(String id) throws Exception;
 }
 

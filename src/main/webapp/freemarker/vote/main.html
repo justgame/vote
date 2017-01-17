@@ -18,7 +18,6 @@
             font-size:   80%;
             *font-size:  80%;
         }
-
         /*
         三种必备样式为：
         paneClass:    "ui-layout-pane" 窗格样式
@@ -135,6 +134,7 @@
             padding:0px 0px 0px 0px;
         }
         .ui-layout-west{
+            width: 210px;
             padding: 0;
             background-color: rgba(198,198,198,0.49);
         }
@@ -162,6 +162,14 @@
             background-color: #fff;
         }
 
+        .menu p {
+            margin: 5px 0;
+        }
+
+        .menu p.date_status {
+            font-size: 12px;
+        }
+
         .inner-center{ background:#f5f5f5;}
         .inner-east{ background:#f5f5f5;}
         .inner-south{ background:#f5f5f5;}
@@ -180,7 +188,8 @@
         $(document).ready(function () {
             $('body').layout({
                 applyDefaultStyles: false,//应用默认样式,
-                west__closable: false
+                west__closable: false,
+                west__size: 210
             });
             // 调用layui的layer模块
             var layer = null;
@@ -222,14 +231,54 @@
         <div class="menu">
             <#if list??>
                 <#list list as vote>
-                    <#if selectId?? && vote.id==selectId>
-                        <a class="actived" href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
-                            ${vote.subject!}
-                        </a>
+                    <#if selectId??>
+                        <#if vote.id==selectId>
+                            <a class="actived" href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
+                                <p>${vote.subject!}</p>
+                                <p class="date_status">
+                                    <#if vote.expired>
+                                        ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;已结束
+                                    <#else>
+                                        ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;进行中
+                                    </#if>
+                                </p>
+                            </a>
+                        <#else>
+                            <a href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
+                                <p>${vote.subject!}</p>
+                                <p class="date_status">
+                                    <#if vote.expired>
+                                        ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;已结束
+                                    <#else>
+                                        ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;进行中
+                                    </#if>
+                                </p>
+                            </a>
+                        </#if>
                     <#else>
-                        <a href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
-                            ${vote.subject!}
-                        </a>
+                        <#if vote_index==0>
+                            <a class="actived" href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
+                                <p>${vote.subject!}</p>
+                                <p class="date_status">
+                                    <#if vote.expired>
+                                        ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;已结束
+                                        <#else>
+                                            ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;进行中
+                                    </#if>
+                                </p>
+                            </a>
+                        <#else>
+                            <a href="/vote/votePage.do?id=${vote.id!}" target="center_iframe">
+                                <p>${vote.subject!}</p>
+                                <p class="date_status">
+                                    <#if vote.expired>
+                                        ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;已结束
+                                        <#else>
+                                            ${vote.startTime?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;进行中
+                                    </#if>
+                                </p>
+                            </a>
+                        </#if>
                     </#if>
                 </#list>
             </#if>

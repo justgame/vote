@@ -6,17 +6,21 @@ import me.justgame.vote.vote.model.Option;
  * Created by xcl on 2017-01-06.
  */
 public interface OptionService {
-    /**
-     * 票数+1
-     * @param id 选项id
-     * @throws Exception
-     */
-    void countsPlus(String id) throws Exception;
 
     /**
-     * 票数+1
-     * @param option 选项
+     * 新增选项
+     * @param name
+     * @param voteId
      * @throws Exception
      */
-    void countsPlus(Option option) throws Exception;
+    void addOption(String name, String voteId) throws Exception;
+
+    /**
+     * 新增选项
+     * @param name
+     * @param voteId
+     * @throws Exception
+     */
+    void addOption(String[] name, String voteId) throws Exception;
+
 }
