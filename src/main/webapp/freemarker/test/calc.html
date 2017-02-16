@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>测试web workers</title>
+</head>
+<body>
+<div id="result" style="border: 1px solid silver;font-size: 25px;color: #66ccff; word-break: break-all;">这是原始的div块</div>
+
+<script>
+    var result = document.getElementById("result");
+    var worker = null;
+    worker = new Worker("/htmldocs/javascript/work.js");
+    function post() {
+        worker.postMessage(result.innerHTML);
+        requestAnimationFrame(post);
+    }
+
+    post();
+    worker.onmessage = function (event) {
+        result.innerHTML = event.data;
+    }
+</script>
+</body>
+</html>

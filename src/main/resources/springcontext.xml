@@ -8,6 +8,7 @@
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
        xsi:schemaLocation="
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
@@ -16,7 +17,8 @@
             http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
             http://www.springframework.org/schema/task
-            http://www.springframework.org/schema/task/spring-task.xsd">
+            http://www.springframework.org/schema/task/spring-task.xsd
+            http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
 
 
     <!--扫描包-->
@@ -135,6 +137,21 @@
         <property name="prefix" value="" />
         <property name="suffix" value=".html" />
     </bean>
+
+    <!-- Shiro -->
+    <!-- shiro 生命周期支持 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+    
+    
+    <!--websocket start-->
+    <bean id="websocket" class="me.justgame.vote.common.websocket.WebsocketEndPoint"/>
+    <websocket:handlers>
+        <websocket:mapping path="/websocket.do" handler="websocket"/>
+        <websocket:handshake-interceptors>
+            <bean class="me.justgame.vote.common.websocket.HandshakeInterceptor"/>
+        </websocket:handshake-interceptors>
+    </websocket:handlers>
+    <!--websocket end-->
 
 
 </beans>
