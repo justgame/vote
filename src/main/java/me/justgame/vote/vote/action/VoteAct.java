@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by xcl on 2017-01-06.
@@ -109,6 +110,15 @@ public class VoteAct {
         }
 
         return result;
+    }
+
+    @RequestMapping("/testException.do")
+    public void testException(String type) throws Exception {
+        if (Objects.equals("1", type))
+            throw new RuntimeException("test runtimeException handler");
+        else if (Objects.equals("2", type))
+            throw new UnsupportedOperationException("test unsupportedOperationException handler");
+        throw new Exception("其他异常");
     }
 
 }

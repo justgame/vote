@@ -1,5 +1,8 @@
 package me.justgame.vote.vote.model;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.sql.Timestamp;
 import java.util.List;
 

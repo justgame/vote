@@ -195,10 +195,10 @@
                             <#list vote.options as option>
                                 <li><input type="radio" name="choose" value="${option.id!}" required>&nbsp;${option.name!}</li>
                             </#list>
-                            <#else>
-                                <#list vote.options as option>
-                                    <li><input type="checkbox" name="choose" value="${option.id!}">&nbsp;${option.name!}</li>
-                                </#list>
+                        <#else>
+                            <#list vote.options as option>
+                                <li><input type="checkbox" name="choose" value="${option.id!}">&nbsp;${option.name!}</li>
+                            </#list>
                         </#if>
                     </ul>
                 </#if>

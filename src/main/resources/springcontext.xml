@@ -22,7 +22,7 @@
 
 
     <!--扫描包-->
-    <context:component-scan base-package="me.justgame.vote"/>
+    <context:component-scan base-package="me.justgame"/>
 
     <!-- 注解驱动  -->
     <!-- 处理请求时返回json字符串的中文乱码问题 -->
@@ -37,6 +37,13 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
+    <!-- 多部分文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="1048576000" />
+        <property name="maxInMemorySize" value="4096" />
+        <property name="defaultEncoding" value="UTF-8"></property>
+    </bean>
 
     <!-- 引入外部配置文件  -->
     <context:property-placeholder location="classpath:jdbc.properties"/>
@@ -81,6 +88,7 @@
         <property name="mapperLocations">
             <list>
                 <!-- 表示在sql包或以下所有目录中，以-map.xml结尾所有文件 -->
+                <value>classpath:sql/*-mapper.xml</value>
                 <value>classpath:sql/*/*-mapper.xml</value>
             </list>
         </property>
@@ -88,7 +96,7 @@
 
     <!-- 通过扫描的模式，所有的mapper都继承SqlMapper接口的接口， 这样一个bean就可以了 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="me.justgame.vote" />
+        <property name="basePackage" value="me.justgame" />
         <property name="annotationClass" value="me.justgame.vote.common.annotations.MyBatisMapper" />
     </bean>
 
@@ -132,7 +140,7 @@
     </bean>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-        <property name="contentType" value="text/html;charset=UTF-8"></property>
+        <property name="contentType" value="text/html;charset=UTF-8" />
         <property name="cache" value="true" />
         <property name="prefix" value="" />
         <property name="suffix" value=".html" />

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 500px;
+            height: 400px;
+            margin: 50px auto;
+            border: 1px solid silver;
+            overflow: scroll;
+        }
+        .one {
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="one"></div>
+    <div class="one"></div><div class="one"></div><div class="one"></div><div class="one"></div><div class="one"></div><div class="one"></div><div class="one"></div>
+    <script>
+        var container = $('.container');
+        var one = $('.one');
+        console.log(container.offset());
+        console.log(container.scrollTop());
+        $.each(one, function (index, item) {
+            console.log($(item).offset());
+            console.log($(item).scrollTop());
+        });
+        container.scrollTop(one.eq(1).offset().top - container.offset().top);
+    </script>
+</div>
+</body>
+</html>

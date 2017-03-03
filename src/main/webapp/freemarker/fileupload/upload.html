@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        img{
+            width:auto;
+            height:auto;
+            max-width:100%;
+            max-height:100%;
+        }
+        div#result {
+            width: 700px;
+            height: 300px;
+            margin: 10px;
+            border: 1px solid silver;
+        }
+
+    </style>
+</head>
+<body>
+<form action="/kindeditor.do" method="post">
+    <textarea id="editor_id" name="content" style="width:700px;height:300px;"></textarea>
+    <input type="submit" value="提交">
+</form>
+<div id="result">${result!}</div>
+
+<script charset="utf-8" src="/htmldocs/plugins/KindEditor-4.1.1/kindeditor-all.js"></script>
+<script charset="utf-8" src="/htmldocs/plugins/KindEditor-4.1.1/lang/zh-CN.js"></script>
+<script>
+    KindEditor.ready(function(K) {
+        window.editor = K.create('#editor_id', {
+            resizeType : 0,
+            uploadJson : "/springUpload.do"
+        });
+    });
+</script>
+</body>
+</html>
