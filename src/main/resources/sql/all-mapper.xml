@@ -2,6 +2,75 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="me.justgame.dao.mapper.AllMapper">
+
+    <resultMap id="UserResultMap" type="me.justgame.model.User">
+        <result property="id" column="ID"/>
+        <result property="name" column="NAME"/>
+        <result property="userNo" column="USER_NO"/>
+    </resultMap>
+
+    <resultMap id="RoleResultMap" type="me.justgame.model.Role">
+        <result property="id" column="ID"/>
+        <result property="name" column="NAME"/>
+        <result property="roleNo" column="ROLE_NO"/>
+    </resultMap>
+
+    <!-- 用户 -->
+    <select id="getUserList" resultMap="UserResultMap">
+      SELECT * FROM V_USER
+    </select>
+
+    <select id="getUserByNo" resultMap="UserResultMap">
+        SELECT * FROM V_USER WHERE USER_NO = #{value}
+    </select>
+
+    <insert id="addUser" parameterType="me.justgame.model.User">
+        INSERT INTO V_USER (
+          ID,
+          NAME,
+          USER_NO
+        ) VALUES (
+          #{id},
+          #{name},
+          #{userNo}
+        )
+    </insert>
+    <!--end-->
+
+    <!-- 角色 -->
+    <select id="getRoleList" resultMap="RoleResultMap">
+        SELECT * FROM V_ROLE
+    </select>
+
+    <select id="getRoleByUserNo" resultMap="RoleResultMap">
+        SELECT * FROM V_ROLE WHERE ROLE_NO IN (SELECT ROLE_NO FROM V_USER_ROLE_RELATION WHERE USER_NO = #{value})
+    </select>
+
+    <insert id="addRole" parameterType="me.justgame.model.Role">
+        INSERT INTO V_ROLE (
+          ID,
+          NAME,
+          ROLE_NO
+        ) VALUES (
+          #{id},
+          #{name},
+          #{roleNo}
+        )
+    </insert>
+
+    <insert id="addUserRoleRelation" parameterType="me.justgame.model.UserRoleRelation">
+        INSERT INTO V_USER_ROLE_RELATION (
+          USER_NO,
+          ROLE_NO
+        ) VALUES (
+          #{userNo},
+          #{roleNo}
+        )
+    </insert>
+    <!--end-->
+
+
+
     <!--kindeditor测试start-->
     <select id="getAllKindeditor" resultType="String">
         SELECT CONTENT FROM KINDEDITOR

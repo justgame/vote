@@ -1,6 +1,8 @@
 package me.justgame.vote.test.action;
 
 import me.justgame.vote.test.dao.TestDao;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;

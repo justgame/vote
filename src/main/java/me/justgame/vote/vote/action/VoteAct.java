@@ -1,11 +1,14 @@
 package me.justgame.vote.vote.action;
 
 import com.alibaba.fastjson.JSON;
+import me.justgame.shiro.Permissions;
 import me.justgame.vote.common.utils.CommonResult;
 import me.justgame.vote.common.utils.IpUtil;
 import me.justgame.vote.vote.model.Vote;
 import me.justgame.vote.vote.service.VoteService;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,8 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/vote")
 public class VoteAct {
+    private static final Logger logger = LoggerFactory.getLogger("mylogger");
+
     @Resource
     private VoteService voteService;
 
@@ -30,6 +35,10 @@ public class VoteAct {
     public ModelAndView home() throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         List<Vote> list = voteService.getVoteAll();
+        logger.debug("test a new log in {}", Thread.currentThread());
+        logger.info("test a new log in {}", Thread.currentThread());
+        logger.warn("test a new log in {}", Thread.currentThread());
+        logger.error("test a new log in {}", Thread.currentThread());
         modelAndView.addObject("list", list);
         modelAndView.setViewName("vote/home");
         return modelAndView;
@@ -76,6 +85,7 @@ public class VoteAct {
         return modelAndView;
     }
 
+    @Permissions(roles = {"sys_manager"})
     @RequestMapping("/addVotePage.do")
     public ModelAndView addVotePage() throws Exception {
         ModelAndView modelAndView = new ModelAndView();

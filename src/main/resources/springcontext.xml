@@ -9,8 +9,7 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:task="http://www.springframework.org/schema/task"
        xmlns:websocket="http://www.springframework.org/schema/websocket"
-       xsi:schemaLocation="
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
             http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
@@ -147,11 +146,137 @@
     </bean>
 
     <!-- Shiro -->
+
     <!-- shiro 生命周期支持 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
-    
-    
+
+    <!-- 会话ID生成器 -->
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+
+    <!-- 会话Cookie模板 -->
+    <!--
+        sessionIdCookie：maxAge=-1表示浏览器关闭时失效此Cookie；
+        rememberMeCookie：即记住我的Cookie，保存时长30天；
+    -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="sid"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/><!-- 30天 -->
+    </bean>
+
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
+    <!-- 会话DAO -->
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+        <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
+        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+    </bean>
+
+    <!-- 会话验证调度器 -->
+    <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+        <property name="sessionValidationInterval" value="1800000"/>
+        <property name="sessionManager" ref="sessionManager"/>
+    </bean>
+
+    <!-- 会话管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="1800000"/>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+    </bean>
+
+    <!-- 基于Form表单的身份验证过滤器 -->
+    <bean id="formAuthenticationFilter"
+          class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+        <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="loginUrl" value="/login.jsp"/>
+        <property name="rememberMeParam" value="rememberMe"/>
+    </bean>
+
+    <bean id="userRealm" class="me.justgame.shiro.UserRealm"/>
+
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+            <list><ref bean="userRealm"/></list>
+        </property>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+        <!--
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="cacheManager" ref="cacheManager"/>
+        -->
+    </bean>
+
+    <!-- 权限管理 -->
+    <bean id="permissionService" class="me.justgame.shiro.PermissionService" />
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" depends-on="securityManager">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <bean id="filterChainManager" class="me.justgame.shiro.CustomDefaultFilterChainManager">
+        <property name="loginUrl" value="/loginPage.do"/>
+        <property name="successUrl" value="/vote/home.do"/>
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <property name="customFilters">
+            <map>
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /htmldocs/**=anon
+                /favicon.ico=anon
+                /test/**=user
+                /**=authc
+            </value>
+        </property>
+    </bean>
+
+    <bean id="filterChainResolver" class="me.justgame.shiro.CustomPathMatchingFilterChainResolver">
+        <property name="filterChainManager" ref="filterChainManager"/>
+    </bean>
+
+    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="shiroFilter"/>
+        <property name="targetMethod" value="setFilterChainResolver"/>
+        <property name="arguments" ref="filterChainResolver"/>
+    </bean>
+
+    <!-- 在spring-mvc.xml配置文件添加Shiro Spring AOP权限注解的支持：-->
+    <!--
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    -->
+    <!-- Enable Shiro Annotations for Spring-configured beans. Only run after -->
+    <!-- the lifecycleBeanProcessor has run: -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
+    <bean class="me.justgame.shiro.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+
+    <!--shiro end-->
+
+
     <!--websocket start-->
+    <!--
     <bean id="websocket" class="me.justgame.vote.common.websocket.WebsocketEndPoint"/>
     <websocket:handlers>
         <websocket:mapping path="/websocket.do" handler="websocket"/>
@@ -159,6 +284,7 @@
             <bean class="me.justgame.vote.common.websocket.HandshakeInterceptor"/>
         </websocket:handshake-interceptors>
     </websocket:handlers>
+    -->
     <!--websocket end-->
 
 
