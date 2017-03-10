@@ -9,5 +9,26 @@
 <p>userId : ${user.id}</p>
 <p>userNo : ${user.userNo}</p>
 <p>userName : ${user.name}</p>
+<p>方法 <input id="method" type="text"></p>
+<p><input id="carryOut" type="button" value="执行"></p>
+<script src="/htmldocs/jquery/jquery-1.11.1.js"></script>
+<script>
+    $(function () {
+        $('#carryOut').click(function () {
+            var method = $('#method').val();
+            $.ajax({
+                type : method,
+                async : false,
+                url : '/takeResult/ceshiyongli.do'
+            }).done(function (result) {
+                console.log(result);
+            }).fail(function () {
+                console.log("出现错误");
+            }).always(function () {
+                console.log("结束了");
+            });
+        });
+    });
+</script>
 </body>
 </html>
